@@ -1,0 +1,19 @@
+{
+  "name": "bgg-stats",
+  "version": "0.0.1",
+  "description": "Reads out BoardGameGeeks hotness and displays long-term data",
+  "main": "index.js",
+  "scripts": {
+    "dev": "env-cmd -f ./config/dev.env node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "D. de Hair",
+  "license": "ISC",
+  "dependencies": {
+    "env-cmd": "^10.1.0",
+    "node-cron": "^3.0.0",
+    "node-fetch": "^2.6.1",
+    "pg": "^8.5.1",
+    "xml2json": "^0.12.0"
+  }
+}
