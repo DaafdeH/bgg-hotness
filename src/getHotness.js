@@ -58,7 +58,3 @@ async function itemsToPG(items) {
         await Promise.all(bundle)
     })     
 }
-
-//feedback Erik:
-//- Alle functions als functions vermelden en geen anonieme arrow functies: Stack traces helderder, volgorde functies komt te vervallen, leesbaarder
-// Functies met keyword 'function' worden door runtime/parser/compiler naar bovenkant 'gehoist', dus locatie maakt dan niet meer uit in script
