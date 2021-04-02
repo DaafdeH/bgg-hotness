@@ -1,0 +1,2 @@
+# bgg-hotness
+This is a simple app that reads out the 'the hotness' API from boardgamegeek.com and stores the data in a database. This data can get read out at will by users in a simple html front-end to see more long-term statistics about what boardgame items are popular on BGG (boardgamegeek). All rights on the data belong to BoardGameGeek and they preserve the right to alter or quit providing data whenever they please.
