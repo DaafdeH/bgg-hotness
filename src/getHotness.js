@@ -1,13 +1,15 @@
 const fetch = require('node-fetch')
 const parser = require('xml2json')
-const withClient = require('./pgClient')
+const { hotItemsToPGDB, addNewGamesToPGDB } = require('./PG/PGInteractions')
 
 module.exports = getHotness
 
 async function getHotness() {
     const bggItems = await queryBGG()
-    const updatedItems = await checkKS(bggItems)
-    await itemsToPG(updatedItems)
+    const updateditems = await updateItems(bggItems)
+
+    await hotItemsToPGDB(bggItems)
+    await addNewGamesToPGDB(updateditems)
 }
 
 async function queryBGG() {
@@ -22,12 +24,11 @@ async function queryBGG() {
     const xml = await res.text()
     const data = parser.toJson(xml, { object:true, coerce: true})
     const items = data.items.item
-    //console.log(items)
 
     return items
 }
 
-async function checkKS(items) {
+async function updateItems(items) {
     const updatedItems = items.map(async (item) => {
         const url = `https://www.boardgamegeek.com/xmlapi2/thing?id=${item.id}`
         const res = await fetch(url)
@@ -36,25 +37,23 @@ async function checkKS(items) {
             throw new Error(`HTTP error getting page for ${url}: ${res.status}`)
         }
 
+        // while (!res.ok) {
+        //     console.log(`Resolution not ok with ${url}: ${res.status}`)
+        //     const res = await fetch(url)
+        // }
+
         const xml = await res.text()
         const data = parser.toJson(xml, { object:true, coerce: true})
+
+        const thumbnail = data.items.item.thumbnail
+        const type = data.items.item.type
         
         const links = data.items.item.link
+        
         const isKickstarter = links.some(link => link.value === 'Crowdfunding: Kickstarter')
-        return { ...item, isKickstarter }
+        return { ...item, isKickstarter, thumbnail, type }
     })
     
     const result = await Promise.all(updatedItems)
     return result
-}
-
-async function itemsToPG(items) {
-    await withClient(async (client) => {
-        const bundle = items.map(async (boardGame) => {
-            const query = 'INSERT INTO boardGames(bgg_id, name, yearpublished, iskickstarter, rank) VALUES($1, $2, $3, $4, $5)'
-            const values = [boardGame.id, boardGame.name.value, boardGame.yearpublished.value, boardGame.isKickstarter, boardGame.rank]
-            await client.query(query, values)
-        })
-        await Promise.all(bundle)
-    })     
 }

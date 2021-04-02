@@ -2,7 +2,7 @@ const cron = require('node-cron')
 const getHotness = require('./src/getHotness')
 
 run()
-cron.schedule('0 * * * * ', run)
+cron.schedule('0 */6 * * * ', run)
 
 async function run() {
     try {
