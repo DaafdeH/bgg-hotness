@@ -1,11 +1,15 @@
 const { Client } = require('pg')
-const connectionString = process.env.DATABASE_URL
+// const connectionString = 
 
 module.exports = withClient
 
 async function withClient(f) {
     const client  = new Client({
-        connectionString,
+        connectionString: process.env.DATABASE_URL
+        // ,
+        // ssl: {
+        //     rejectUnauthorized: false
+        // }
     })
     client.connect()
     
