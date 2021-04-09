@@ -1,10 +1,12 @@
 const cron = require('node-cron')
 const getHotness = require('./src/getHotness')
 const startWeb = require('./src/express/express')
+const buildDB = require('./src/PG/initPGHeroku')
 
 
 //run()
 console.log('Started')
+buildDB()
 
 startWeb()
 
