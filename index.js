@@ -4,13 +4,13 @@ const startWeb = require('./src/express/express')
 const buildDB = require('./src/PG/initPGHeroku')
 
 
-//run()
+run()
 console.log('Started')
-buildDB()
+//buildDB()
 
 startWeb()
 
-cron.schedule('0 */12 * * * ', run)
+//cron.schedule('0 */12 * * * ', run)
 
 async function run() {
     try {
