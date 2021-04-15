@@ -1,7 +1,7 @@
 const getHotness = require('./src/getHotness')
 
 run()
-console.log('Started')
+console.log('Started fetching hot items at ', new Date().toDateString() , new Date().toLocaleTimeString('nl-NL'))
 
 async function run() {
     try {
