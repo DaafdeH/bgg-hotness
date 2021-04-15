@@ -1,11 +1,10 @@
 const getHotness = require('./src/getHotness')
 const startWeb = require('./src/express/express')
 
-
 run()
 console.log('Started')
 
-startWeb()
+//startWeb()
 
 async function run() {
     try {
