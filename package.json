@@ -4,7 +4,7 @@
   "description": "Reads out BoardGameGeeks hotness and displays long-term data",
   "main": "index.js",
   "scripts": {
-    "dev": "env-cmd -f ./config/dev.env node index.js",
+    "dev": "env-cmd -f ./config/dev.env node getData.js",
     "create": "node ./src/PG/initPGHeroku.js",
     "start": "node index.js"
   },

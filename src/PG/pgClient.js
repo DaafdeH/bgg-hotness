@@ -1,5 +1,4 @@
 const { Client } = require('pg')
-// const connectionString = 
 
 module.exports = withClient
 

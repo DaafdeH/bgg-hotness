@@ -6,7 +6,18 @@ module.exports = getHotness
 
 async function getHotness() {
     const bggItems = await queryBGG()
-    const updateditems = await updateItems(bggItems)
+
+    var attempts = 0;
+    var updateditems = await updateItems(bggItems)
+
+    while (updateditems == null && attempts < 5) {
+        updateditems = await updateItems(bggItems)
+        attempts++
+    }
+
+    if (updateditems == null) {
+        throw new Error('Failed to update iteminformation after 5 tries. No new attempts will be made')
+    }
 
     await hotItemsToPGDB(bggItems)
     await addNewGamesToPGDB(updateditems)
@@ -34,13 +45,9 @@ async function updateItems(items) {
         const res = await fetch(url)
 
         if (!res.ok) {
-            throw new Error(`HTTP error getting page for ${url}: ${res.status}`)
+            return null;
+            //throw new Error(`HTTP error getting page for ${url}: ${res.status}`)
         }
-
-        // while (!res.ok) {
-        //     console.log(`Resolution not ok with ${url}: ${res.status}`)
-        //     const res = await fetch(url)
-        // }
 
         const xml = await res.text()
         const data = parser.toJson(xml, { object:true, coerce: true})
