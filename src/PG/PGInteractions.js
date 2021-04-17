@@ -18,7 +18,9 @@ async function addNewGamesToPGDB(items) {
     await withClient(async (client) => {
         const tableName = 'tempGames'
 
-        const createQuery = `CREATE TABLE public.${tableName}(
+        const createQuery = `DROP TABLE IF EXISTS ${tableName};
+        
+        CREATE TABLE public.${tableName}(
             bgg_id integer,
             name text,
             yearpublished integer,
@@ -34,12 +36,10 @@ async function addNewGamesToPGDB(items) {
         })
         await Promise.all(bundle)
 
-        const joinQuery = `INSERT INTO boardgame_items(bgg_id, name, yearpublished, iskickstarter, thumbnail, type) 
-        SELECT ${tableName}.bgg_id, ${tableName}.name, ${tableName}.yearpublished, ${tableName}.iskickstarter, ${tableName}.thumbnail, ${tableName}.type
-        FROM ${tableName}
-        EXCEPT
-        SELECT bgg_id, name, yearpublished, iskickstarter, thumbnail, type
-        FROM boardgame_items`
+        const joinQuery = `INSERT INTO boardgame_items(bgg_id, name, yearpublished, iskickstarter, thumbnail, type)
+		SELECT *
+        FROM tempgames
+        WHERE NOT EXISTS (SELECT * FROM boardgame_items)`
 
         await client.query(joinQuery)
 

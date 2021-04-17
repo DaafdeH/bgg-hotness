@@ -8,7 +8,7 @@ async function getHotness() {
     const bggItems = await queryBGG()
 
     var attempts = 0;
-    var updateditems = await updateItems(bggItems)
+    var updateditems;
 
     while (updateditems == null && attempts < 5) {
         updateditems = await updateItems(bggItems)
