@@ -37,9 +37,8 @@ async function addNewGamesToPGDB(items) {
         await Promise.all(bundle)
 
         const joinQuery = `INSERT INTO boardgame_items(bgg_id, name, yearpublished, iskickstarter, thumbnail, type)
-		SELECT *
-        FROM tempgames
-        WHERE NOT EXISTS (SELECT * FROM boardgame_items)`
+		SELECT * FROM ${tableName}
+        WHERE NOT EXISTS (SELECT bgg_id FROM boardgame_items WHERE boardgame_items.bgg_id = ${tableName}.bgg_id)`
 
         await client.query(joinQuery)
 

@@ -7,16 +7,17 @@ module.exports = getHotness
 async function getHotness() {
     const bggItems = await queryBGG()
 
-    var attempts = 0;
-    var updateditems;
+    let attempts = 0;
+    let updateditems;
 
-    while (updateditems == null && attempts < 5) {
+    while (!updateditems && attempts < 5) {
         updateditems = await updateItems(bggItems)
+        console.log(updateditems)
         attempts++
     }
 
-    if (updateditems == null) {
-        throw new Error('Failed to update iteminformation after 5 tries. No new attempts will be made')
+    if (!updateditems) {
+        throw new Error('Failed to update item information after 5 tries. No new attempts will be made')
     }
 
     await hotItemsToPGDB(bggItems)

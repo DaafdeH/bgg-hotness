@@ -9,11 +9,39 @@
     <body>
         <div class="main-content">
             <h2>long-term hotness on BoardGameGeek.com</h2>
-            <p>Welcome to the BGG stats website! This is just a temporary placeholder that doesn't display much. Later you can come back here and see long-term trends in the most popular items on BoardGameGeek.</p>
-
-            <table id="gamesTable">
+            <p>Welcome to the BGG stats website! This is just a temporary placeholder that doesn't display much. Later you can come back here and see long-term trends in the most popular items on <a href="https://www.boardgamegeek.com" target="_blank">BoardGameGeek.</a></p>
+        </div>
+        <div class="input-options">
+                <label for="Period">Show data of:</label>
+                <select id="period" name="Period">
+                    <option value="today">today</option>
+                    <option value="week">last week</option>
+                    <option value="month">last month</option>
+                </select>
+                <label for="YoP">Year of Publishing:</label>
+                <select id="yop" name="YoP">
+                    <option value ="">Everything</option>
+                    <option value="false">Up to this year</option>
+                    <option value="true">This year and Later</option>
+                </select>
+                <label for="ks">Show kickstarters?</label>
+                <select id="kickstarter" name="ks">
+                    <option value="true">Only kickstarters</option>
+                    <option value="false">Only regular games</option>
+                    <option value ="">Show both</option>
+                </select>
+                <label for="exp">Show expansions?</label>
+                <select id="expansions" name="exp">
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                </select>
+                <button type="submit" onclick="repopulateTable()" id="input-btn">Request data</button>
+        </div>
+        <div class="tbl-header">
+            <table cellpadding="0" cellspacing="0" border="0">
                 <thead>
                     <tr>
+                        <th>Nr.</th>
                         <th>Thumbnail</th>
                         <th>Name</th>
                         <th>Year of publishing</th>
@@ -21,6 +49,10 @@
                         <th>Boardgame/Expansion</th>
                     </tr>
                 </thead>
+            </table>
+        </div>
+        <div class="tbl-content">
+            <table id="gamesTable" cellpadding="0" cellspacing="0" border="0">
                 <tbody>
                     
                 </tbody>
@@ -29,6 +61,13 @@
         <div class="footer">
             <p>All rights to the data shown here belong to BoardGameGeek and their team. They have the right to stop providing this data or ask for it's retraction at any time.</p>
         </div>
+        <script>
+            function repopulateTable() {populateTable()}</script>
         <script src='../js/populateTable.js'></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+            $(window).on("load resize ", function() {
+            var scrollWidth = $('.tbl-content').width() - $('.tbl-content table').width();
+            $('.tbl-header').css({'padding-right':scrollWidth});
+          }).resize();</script>
     </body>
 </html>
