@@ -13,7 +13,8 @@ if (process.env.ENVIRONMENT === 'PRD') {
     client.connect()
     
     try {
-        await f(client)
+        const data = await f(client)
+        return data
     } finally {
         client.end()
     }
