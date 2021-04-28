@@ -12,6 +12,5 @@ async function fetchDataWithQuery(period, kickstarter, expansions, yop) {
         //console.log(results.rows)
         return results.rows
     })
-    console.log('Return value in fetchDataWithQuery: ', data)
     return data
 }

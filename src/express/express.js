@@ -33,7 +33,6 @@ const withExpress = function () {
 
         try {
             const data = await fetchDataWithQuery(period, kickstarter, expansions, yop)
-            console.log('Data element in express package:', data)
             res.json(data)
         } catch (e) {
             res.status(500).send()
