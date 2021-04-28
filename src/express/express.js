@@ -33,6 +33,7 @@ const withExpress = function () {
 
         try {
             const data = await fetchDataWithQuery(period, kickstarter, expansions, yop)
+            console.log(data)
             res.json(data)
         } catch (e) {
             res.status(500).send()
