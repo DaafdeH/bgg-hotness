@@ -1,48 +1,8 @@
 function populateTable() {
-    let period, yearOfPublishing, kickstarter, expansions
-
-    switch (document.getElementById("period").value) {
-        case "today":
-            period = '1 day'
-            break;
-        case "week":
-            period = '1 week'
-            break;
-        case "month": 
-            period = '1 month'
-            break;
-        default:
-            period = null
-    }
-
-    const thisYear = new Date().getFullYear()
-    switch(document.getElementById("yop").value) {
-        case 'true':
-            yearOfPublishing = `AND yearpublished >= ${thisYear}`
-            break;
-        case 'false':
-            yearOfPublishing = `AND yearpublished < ${thisYear}`
-            break;
-        default:
-            yearOfPublishing = ''
-    }
-
-    switch (document.getElementById("kickstarter").value) {
-        case 'true':
-            kickstarter = `AND iskickstarter = true`
-            break;
-        case 'false':
-            kickstarter = `AND iskickstarter = false`
-            break;
-        default:
-            kickstarter = ''
-    }
-
-    if (document.getElementById("expansions").value) {
-        expansions = `AND type ='boardgame'`
-    } else {
-        expansions = ''
-    }
+    const period = document.getElementById("period").value
+    const yearOfPublishing = document.getElementById("yop").value
+    const kickstarter = document.getElementById("kickstarter").value
+    const expansions = document.getElementById("expansions").value
     
     try {
         getHotGames(period, kickstarter, expansions, yearOfPublishing)
@@ -65,7 +25,7 @@ async function getHotGames(period, kickstarter, expansions, yearOfPublishing) {
             "kickstarter": `${kickstarter}`,
             "expansions": `${expansions}`
         }
-    
+        
         const request = await fetch(url, {
             method: 'POST',
             headers: {
@@ -73,6 +33,7 @@ async function getHotGames(period, kickstarter, expansions, yearOfPublishing) {
             },
             body: JSON.stringify(reqdata),
           })
+        
         const data = await request.json()
         fillTable(data)
     } catch (e) {
