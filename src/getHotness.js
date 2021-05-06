@@ -20,8 +20,14 @@ async function getHotness() {
         throw new Error('Failed to update item information after 5 tries. No new attempts will be made')
     }
 
-    await hotItemsToPGDB(bggItems)
-    await addNewGamesToPGDB(updateditems)
+    try{
+        await hotItemsToPGDB(bggItems)
+        await addNewGamesToPGDB(updateditems)
+    } catch (e) {
+        console.error(e)
+        console.log(`updateditems = ${updateditems}`)
+    }
+    
 }
 
 async function queryBGG() {
