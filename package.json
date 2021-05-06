@@ -7,7 +7,7 @@
     "dev": "env-cmd -f ./config/dev.env node getData.js",
     "dev2": "env-cmd -f ./config/dev.env nodemon index.js",
     "test": "env-cmd -f ./config/dev.env node ./src/fetchService.js",
-    "create": "env-cmd -f ./config/dev.env node ./playground/updateBGGItemsDB.js",
+    "create": "env-cmd -f ./config/dev.env node ./updateBGGItemsDB.js",
     "start": "node index.js"
   },
   "author": "D. de Hair",
