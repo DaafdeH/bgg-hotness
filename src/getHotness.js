@@ -69,5 +69,10 @@ async function updateItems(items) {
     })
     
     const result = await Promise.all(updatedItems)
-    return result
+    
+    if (result.includes(null)) {
+        return null
+    } else {
+        return result
+    }
 }

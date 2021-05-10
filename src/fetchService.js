@@ -8,6 +8,11 @@ async function fetchDataWithQuery(period, kickstarter, expansions, yearOfPublish
     const yopQuery = filterYoP(yearOfPublishing)
     const ksQuery = filterKS(kickstarter)
     const expQuery = filterExp(expansions)
+    let where;
+
+    if (yopQuery || ksQuery || expQuery) {
+        where = 'WHERE'
+    }
 
     const data = await withClient(async (client) => {
         const query = `SELECT * FROM boardgame_items
@@ -51,7 +56,6 @@ function filterKS(kickstarter) {
             return `AND iskickstarter = true`
         case 'false':
             return `AND iskickstarter = false`
-            break;
         default:
             return ''
     }
