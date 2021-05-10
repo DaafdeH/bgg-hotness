@@ -9,18 +9,18 @@ async function fetchDataWithQuery(period, kickstarter, expansions, yearOfPublish
     const ksQuery = filterKS(kickstarter)
     const expQuery = filterExp(expansions)
 
+    const filters = [yopQuery, ksQuery, expQuery].filter(Boolean)
+
     const data = await withClient(async (client) => {
-        const query = `SELECT * FROM boardgame_items
-        right join (
-            SELECT DISTINCT bgg_id, sum(51 - rank) as rankCount
-            FROM hotness
-            WHERE datetime_polled >= CURRENT_DATE - INTERVAL '${periodQuery}'
-            GROUP BY bgg_id
-            ORDER BY rankcount DESC
-        ) as countedRank
-        on boardgame_items.bgg_id = countedRank.bgg_id
-        WHERE rankCount > 0 ${yopQuery} ${ksQuery} ${expQuery}
-        ORDER BY countedRank.rankcount DESC`
+        const query = `
+        SELECT h.bgg_id, ROUND(AVG(h.rank), 2) as rankCount, count(h.bgg_id) as occurrences, bi.*
+        FROM hotness as h
+        INNER JOIN boardgame_items as bi ON h.bgg_id = bi.bgg_id
+        WHERE h.datetime_polled >= CURRENT_DATE - INTERVAL '${periodQuery}'
+        ${filters.length ? `AND ${filters.join(' AND ')}` : ``}
+        GROUP BY h.bgg_id, bi.bgg_id
+        ORDER BY rankCount ASC
+        LIMIT 50`
         const results = await client.query(query)
         //console.log(results.rows)
         return results.rows
@@ -37,7 +37,7 @@ function filterPeriod(period) {
         case "month": 
             return '1 month'
         default:
-            return null
+            return '1 day'
     }
 }
 
@@ -45,9 +45,9 @@ function filterYoP(yearOfPublishing) {
     const thisYear = new Date().getFullYear()
     switch(yearOfPublishing) {
         case 'true':
-            return `AND yearpublished >= ${thisYear}`
+            return `yearpublished >= ${thisYear}`
         case 'false':
-            return ` AND yearpublished < ${thisYear}`
+            return `yearpublished < ${thisYear}`
         default:
             return ''
     }
@@ -56,9 +56,9 @@ function filterYoP(yearOfPublishing) {
 function filterKS(kickstarter) {
     switch (kickstarter) {
         case 'true':
-            return `AND iskickstarter = true`
+            return `iskickstarter = true`
         case 'false':
-            return `AND iskickstarter = false`
+            return `iskickstarter = false`
         default:
             return ''
     }
@@ -66,7 +66,7 @@ function filterKS(kickstarter) {
 
 function filterExp(expansions) {
     if (expansions) {
-        return `AND type ='boardgame'`
+        return `type ='boardgame'`
     } else {
         return ''
     }

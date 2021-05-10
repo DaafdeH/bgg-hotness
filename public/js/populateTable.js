@@ -1,11 +1,13 @@
-function populateTable() {
-    const period = document.getElementById("period").value
-    const yearOfPublishing = document.getElementById("yop").value
-    const kickstarter = document.getElementById("kickstarter").value
-    const expansions = document.getElementById("expansions").value
-    
+async function populateTable() {
     try {
-        getHotGames(period, kickstarter, expansions, yearOfPublishing)
+        const period = document.getElementById("period").value
+        const yearOfPublishing = document.getElementById("yop").value
+        const kickstarter = document.getElementById("kickstarter").value
+        const expansions = document.getElementById("expansions").value
+    
+    
+        const data = await getHotGames(period, kickstarter, expansions, yearOfPublishing)
+        fillTable(data)
     }
     catch (e) {
         console.error(e)
@@ -35,7 +37,7 @@ async function getHotGames(period, kickstarter, expansions, yearOfPublishing) {
           })
         
         const data = await request.json()
-        fillTable(data)
+        return data
     } catch (e) {
         console.error(e)
     }
@@ -48,10 +50,12 @@ function fillTable(data) {
     tableBody.innerHTML = ""
 
     data.forEach(element => {
-        let href = `https://www.boardgamegeek.com/${element.type}/${element.bgg_id}/${element.name}`.replace(/\s+/g, '-').replace(":", "")
+        console.log(element)
+        let href = `https://www.boardgamegeek.com/${element.type}/${element.bgg_id}`
         tableBody.insertRow().innerHTML = 
             // `<td>${i}</td>` +
             `<td>${element.rankcount}</td>` +
+            `<td>${element.occurrences}</td>` +
             `<td><a href="${href}" target="_blank"><img src=${element.thumbnail}></a></td>` +
             `<td>${element.name}</td>` +
             `<td>${element.yearpublished}</td>` +

@@ -26,10 +26,7 @@ const withExpress = function () {
     }))
 
     app.post('/query', jsonParser, (async (req, res) => {
-        const period = req.body.period
-        const kickstarter = req.body.kickstarter
-        const expansions = req.body.expansions
-        const yop = req.body.yop
+        const { period, kickstarter, expansions, yop } = req.body
 
         try {
             const data = await fetchDataWithQuery(period, kickstarter, expansions, yop)
