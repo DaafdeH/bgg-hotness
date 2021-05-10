@@ -50,7 +50,8 @@ function fillTable(data) {
     data.forEach(element => {
         let href = `https://www.boardgamegeek.com/${element.type}/${element.bgg_id}/${element.name}`.replace(/\s+/g, '-').replace(":", "")
         tableBody.insertRow().innerHTML = 
-            `<td>${i}</td>` +
+            // `<td>${i}</td>` +
+            `<td>${element.rankcount}</td>` +
             `<td><a href="${href}" target="_blank"><img src=${element.thumbnail}></a></td>` +
             `<td>${element.name}</td>` +
             `<td>${element.yearpublished}</td>` +

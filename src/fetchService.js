@@ -8,16 +8,19 @@ async function fetchDataWithQuery(period, kickstarter, expansions, yearOfPublish
     const yopQuery = filterYoP(yearOfPublishing)
     const ksQuery = filterKS(kickstarter)
     const expQuery = filterExp(expansions)
-    let where;
-
-    if (yopQuery || ksQuery || expQuery) {
-        where = 'WHERE'
-    }
 
     const data = await withClient(async (client) => {
         const query = `SELECT * FROM boardgame_items
-        WHERE bgg_id IN
-        (SELECT bgg_id FROM hotness WHERE datetime_polled >= CURRENT_DATE - INTERVAL '${periodQuery}') ${ksQuery} ${expQuery} ${yopQuery}`
+        right join (
+            SELECT DISTINCT bgg_id, sum(51 - rank) as rankCount
+            FROM hotness
+            WHERE datetime_polled >= CURRENT_DATE - INTERVAL '${periodQuery}'
+            GROUP BY bgg_id
+            ORDER BY rankcount DESC
+        ) as countedRank
+        on boardgame_items.bgg_id = countedRank.bgg_id
+        WHERE rankCount > 0 ${yopQuery} ${ksQuery} ${expQuery}
+        ORDER BY countedRank.rankcount DESC`
         const results = await client.query(query)
         //console.log(results.rows)
         return results.rows
@@ -44,7 +47,7 @@ function filterYoP(yearOfPublishing) {
         case 'true':
             return `AND yearpublished >= ${thisYear}`
         case 'false':
-            return `AND yearpublished < ${thisYear}`
+            return ` AND yearpublished < ${thisYear}`
         default:
             return ''
     }
