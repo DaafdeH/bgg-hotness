@@ -12,7 +12,11 @@ async function getHotness() {
 
     while (!updateditems && attempts < 5) {
         updateditems = await updateItems(bggItems)
-        console.log('attempts = ', attempts)
+        if (attempts > 0) {
+            await setTimeout(() => {
+                console.log('attempts = ', attempts)
+            },3000)
+        }
         attempts++
     }
 
