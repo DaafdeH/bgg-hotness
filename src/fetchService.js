@@ -1,6 +1,6 @@
 const withClient = require('./PG/pgClient')
 
-module.exports = fetchDataWithQuery
+module.exports = { fetchDataWithQuery, fetchGraphDataWithQuery }
 
 async function fetchDataWithQuery(period, kickstarter, expansions, yearOfPublishing) {
 
@@ -23,6 +23,22 @@ async function fetchDataWithQuery(period, kickstarter, expansions, yearOfPublish
         LIMIT 50`
         const results = await client.query(query)
         //console.log(results.rows)
+        return results.rows
+    })
+    return data
+}
+
+async function fetchGraphDataWithQuery(bgg_id, period) {
+    //console.log("Start of Internal query!" + bgg_id, period)
+    const periodQuery = filterPeriod(period)
+
+    const data = await withClient(async (client) => {
+        const query = `SELECT datetime_polled, rank FROM hotness
+        WHERE bgg_id = ${id} AND datetime_polled >= CURRENT_DATE - INTERVAL '${periodQuery}'`
+        console.log(query)
+        const results  = await client.query(query)
+
+        console.log(results.rows)
         return results.rows
     })
     return data

@@ -1,7 +1,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const path = require('path')
-const fetchDataWithQuery = require('./../fetchService')
+const { fetchDataWithQuery, fetchGraphDataWithQuery } = require('./../fetchService')
 
 const withExpress = function () {
     const app = express()
@@ -30,6 +30,17 @@ const withExpress = function () {
 
         try {
             const data = await fetchDataWithQuery(period, kickstarter, expansions, yop)
+            res.json(data)
+        } catch (e) {
+            res.status(500).send()
+        }
+    }))
+
+    app.post('/chartquery', jsonParser, (async (req, res) => {
+        const { id, period } = req.body
+        
+        try {
+            const data = await fetchGraphDataWithQuery(id, period)
             res.json(data)
         } catch (e) {
             res.status(500).send()
