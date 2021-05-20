@@ -22,23 +22,20 @@ async function fetchDataWithQuery(period, kickstarter, expansions, yearOfPublish
         ORDER BY rankCount ASC
         LIMIT 50`
         const results = await client.query(query)
-        //console.log(results.rows)
         return results.rows
     })
     return data
 }
 
 async function fetchGraphDataWithQuery(bgg_id, period) {
-    //console.log("Start of Internal query!" + bgg_id, period)
     const periodQuery = filterPeriod(period)
 
     const data = await withClient(async (client) => {
-        const query = `SELECT datetime_polled, rank FROM hotness
-        WHERE bgg_id = ${id} AND datetime_polled >= CURRENT_DATE - INTERVAL '${periodQuery}'`
-        console.log(query)
+        const query = `SELECT h.datetime_polled, h.rank, b.name, b.yearpublished FROM hotness as h
+        LEFT JOIN boardgame_items as b ON h.bgg_id = b.bgg_id
+        WHERE h.bgg_id = ${bgg_id} AND h.datetime_polled >= CURRENT_DATE - INTERVAL '${periodQuery}'`
         const results  = await client.query(query)
 
-        console.log(results.rows)
         return results.rows
     })
     return data

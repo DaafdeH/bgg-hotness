@@ -14,13 +14,15 @@
         <div class="input-options">
             <label for="Bgg_id">Game ID:</label>
             <input type="text" id="bgg_id" name="Bgg_id"><br><br>
+            <label for="Bgg_id">Year published:</label>
+            <input type="text" id="yearPublished" name="YearPublished"><br><br>
             <label for="Period">Show data of:</label>
                 <select id="period" name="Period">
                     <option value="today">today</option>
                     <option value="week">last week</option>
                     <option value="month">last month</option>
                 </select>
-            <button type="submit" onclick="repopulateTable()" id="input-btn">change period</button>
+            <button type="submit" onclick="buildChart()" id="input-btn">change period</button>
     </div>
     <div class="canvas-holder" width="400" height="400">
         <canvas id="lineChart"></canvas>
