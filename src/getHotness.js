@@ -52,6 +52,7 @@ async function updateItems(items) {
         const res = await fetch(url)
 
         if (!res.ok) {
+            console.log(`Didn't get data at ${item.id} due to ${res.status}`)
             return null;
             //throw new Error(`HTTP error getting page for ${url}: ${res.status}`)
         }

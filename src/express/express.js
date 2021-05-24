@@ -47,6 +47,18 @@ const withExpress = function () {
         }
     }))
 
+    app.get('/chart', function(req, res)  {
+        const bgg_id = req.query.bgg_id
+        console.log(bgg_id)
+        console.log('hey!')
+
+        try {
+            res.sendFile('../../public/chart.html')
+        } catch (e) {
+            console.error(e)
+        }
+    })
+
     app.listen(port, () => {
         console.log(`Server is up on port ${port}`)
     })
