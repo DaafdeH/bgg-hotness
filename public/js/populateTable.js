@@ -22,10 +22,10 @@ async function getHotGames(period, kickstarter, expansions, yearOfPublishing) {
     const url = window.location.href.replace("/home", "/query")
     try {
         const reqdata = {
-            "period": `${period}`,
+            period,
             "yop": `${yearOfPublishing}`,
-            "kickstarter": `${kickstarter}`,
-            "expansions": `${expansions}`
+            kickstarter,
+            expansions
         }
         
         const request = await fetch(url, {
@@ -45,22 +45,24 @@ async function getHotGames(period, kickstarter, expansions, yearOfPublishing) {
 
 function fillTable(data) {
     const tableBody = document.getElementById("gamesTable").getElementsByTagName("tbody")[0]
+    const period = document.getElementById("period").value
     let i = 1
 
     tableBody.innerHTML = ""
 
     data.forEach(element => {
-        console.log(element)
         let href = `https://www.boardgamegeek.com/${element.type}/${element.bgg_id}`
+        let buttonHref = window.location.href.replace('home', `chart?bgg_id=${element.bgg_id}&name=${element.name}&period=${period}&yop=${element.yearpublished}`)
         tableBody.insertRow().innerHTML = 
-            // `<td>${i}</td>` +
+            `<td>${i}</td>` +
             `<td>${element.rankcount}</td>` +
             `<td>${element.occurrences}</td>` +
             `<td><a href="${href}" target="_blank"><img src=${element.thumbnail}></a></td>` +
             `<td>${element.name}</td>` +
             `<td>${element.yearpublished}</td>` +
             `<td>${element.iskickstarter}</td>` +
-            `<td>${element.type}</td>`
+            `<td>${element.type}</td>` +
+            `<td><button type="button" onclick="location.href='${buttonHref}'">Graph for ${element.name}</button></td>`
         i++
     })        
 }

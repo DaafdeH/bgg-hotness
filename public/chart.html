@@ -13,7 +13,9 @@
         </div>
         <div class="input-options">
             <label for="Bgg_id">Game ID:</label>
-            <input type="text" id="bgg_id" name="Bgg_id"><br><br>
+            <input type="text" id="bgg_id" name="Bgg_id">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="Name"><br><br>
             <label for="Bgg_id">Year published:</label>
             <input type="text" id="yearPublished" name="YearPublished"><br><br>
             <label for="Period">Show data of:</label>
@@ -30,13 +32,13 @@
     <div class="footer">
         <p>All rights to the data shown here belong to BoardGameGeek and their team. They have the right to stop providing this data or ask for it's retraction at any time.</p>
     </div>
-    <script>
+    <!-- <script>
         window.addEventListener('load', (event) => {
-            const bggID_Field = document.getElementById('bgg_id')
+            
             bggID_Field.value = '167355'
             bggID_Field.disabled = true
         })
-    </script>
+    </script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
     <script src='./js/buildChart.js'></script>
     </body>

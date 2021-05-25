@@ -1,15 +1,34 @@
 window.addEventListener('load', (event) => {
     try{
+        loadGameInfo()
         buildChart()
     } catch (e) {
         console.error(e)
     }
 });
 
-async function buildChart() {
-    const id = new URL (window.location.href).searchParams.get('bgg_id')
-    let period = document.getElementById('period').value
+function loadGameInfo() {
+    const bggIDField = document.getElementById('bgg_id')
+    bggIDField.value = new URL (window.location.href).searchParams.get('bgg_id')
+    bggIDField.disabled = true
+    
+    const nameField = document.getElementById("name")
+    nameField.value = new URL (window.location.href).searchParams.get('name')
+    nameField.disabled = true
+    
+    const ypFIeld = document.getElementById("yearPublished")
+    ypFIeld.disabled = true
 
+    let period = new URL (window.location.href).searchParams.get('period')
+    document.getElementById("period").value = period
+    
+}
+
+async function buildChart() {
+    const id = document.getElementById('bgg_id').value
+    const name = document.getElementById("name")
+    let period = document.getElementById('period').value
+    
     const data = await getDataForChart(id, period)
 
     const labels = data.map((ranking) => {
@@ -17,11 +36,11 @@ async function buildChart() {
         let time = ranking.datetime_polled.substr(11, 5)
         return date + " " + time
     })
+
     const dataset = data.map(ranking => ranking.rank)
 
     const label = data[0].name
     const ypFIeld = document.getElementById("yearPublished")
-    ypFIeld.disabled = true
     ypFIeld.value = data[0].yearpublished
 
    if (period !== "today") {

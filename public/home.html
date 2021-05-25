@@ -41,14 +41,15 @@
             <table cellpadding="0" cellspacing="0" border="0">
                 <thead>
                     <tr>
-                        <!-- <th>Nr.</th> -->
+                        <th>Number</th>
                         <th>average score</th>
                         <th>Times in hotness</th>
                         <th>Thumbnail</th>
                         <th>Name</th>
                         <th>Year of publishing</th>
                         <th>Kickstarter?</th>
-                        <th>type</th>
+                        <th>Type</th>
+                        <th>Graph Link</th>
                     </tr>
                 </thead>
             </table>
@@ -65,7 +66,7 @@
         </div>
         <script>
             function repopulateTable() {populateTable()}</script>
-        <script src='../js/populateTable.js'></script>
+        <script src='./js/populateTable.js'></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
             $(window).on("load resize ", function() {
             var scrollWidth = $('.tbl-content').width() - $('.tbl-content table').width();
