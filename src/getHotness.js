@@ -103,7 +103,7 @@ function retryOnError({ retries, onRetry }, f) {
 
             onRetry({ availableRetries })
 
-            const retryOnErrorFunction = retryOnError({ retries: availableRetries }, f)
+            const retryOnErrorFunction = retryOnError({ retries: availableRetries,onRetry }, f)
             const result = await retryOnErrorFunction(...args)
             return result
         }
