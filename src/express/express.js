@@ -47,17 +47,17 @@ const withExpress = function () {
         }
     }))
 
-    app.get('/chart', function(req, res)  {
-        const bgg_id = req.query.bgg_id
-        console.log(bgg_id)
-        console.log('hey!')
+    // app.get('/somethingelse', function(req, res)  {
+    //     const bgg_id = req.query.bgg_id
 
-        try {
-            res.sendFile('../../public/chart.html')
-        } catch (e) {
-            console.error(e)
-        }
-    })
+    //     const url = __dirname.replace(`src\\express`, `public\\chart.html`)
+
+    //     try {
+    //         res.sendFile(url)
+    //     } catch (e) {
+    //         console.error(e)
+    //     }
+    // })
 
     app.listen(port, () => {
         console.log(`Server is up on port ${port}`)

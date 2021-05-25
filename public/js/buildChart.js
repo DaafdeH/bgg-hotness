@@ -7,7 +7,7 @@ window.addEventListener('load', (event) => {
 });
 
 async function buildChart() {
-    const id = document.getElementById('bgg_id').value
+    const id = new URL (window.location.href).searchParams.get('bgg_id')
     let period = document.getElementById('period').value
 
     const data = await getDataForChart(id, period)

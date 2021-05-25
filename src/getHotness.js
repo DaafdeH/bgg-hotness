@@ -8,17 +8,7 @@ async function getHotness() {
     const bggItems = await queryBGG()
 
     let attempts = 0;
-    let updateditems;
-
-    while (!updateditems && attempts < 5) {
-        updateditems = await updateItems(bggItems)
-        attempts++
-        console.log('attempts = ', attempts)
-    }
-
-    if (!updateditems) {
-        throw new Error('Failed to update item information after 5 tries. No new attempts will be made')
-    }
+    const updateditems = await fetchItems(bggItems)
 
     try{
         await hotItemsToPGDB(bggItems)
@@ -46,30 +36,38 @@ async function queryBGG() {
     return items
 }
 
-async function updateItems(items) {
-    const updatedItems = items.map(async (item) => {
-        const url = `https://www.boardgamegeek.com/xmlapi2/thing?id=${item.id}`
-        const res = await fetch(url)
+async function fetchItems(items) {
+    console.log(`Retrieving ${items.length} items`)
+    const result = await executeSequential(items, retryOnError(
+        { 
+            retries: 5, 
+            onRetry: ({ availableRetries }) => console.log(`Retrying, ${availableRetries} retries left`),
+        },
+        async (item) => {
+            // console.log(`Retrieving item with id ${item.id}`)
+            const url = `https://www.boardgamegeek.com/xmlapi2/thing?id=${item.id}`
+            const res = await fetch(url)
+            // console.log(`Done`)
+            process.stdout.write('.')
 
-        if (!res.ok) {
-            console.log(`Didn't get data at ${item.id} due to ${res.status}`)
-            return null;
-            //throw new Error(`HTTP error getting page for ${url}: ${res.status}`)
+            if (!res.ok) {
+                throw new Error(`Didn't get data at ${item.id} due to ${res.status}`)
+            }
+
+            const xml = await res.text()
+            const data = parser.toJson(xml, { object:true, coerce: true})
+
+            const thumbnail = data.items.item.thumbnail
+            const type = data.items.item.type
+            
+            const links = data.items.item.link
+            
+            const isKickstarter = links.some(link => link.value === 'Crowdfunding: Kickstarter')
+            return { ...item, isKickstarter, thumbnail, type }
         }
-
-        const xml = await res.text()
-        const data = parser.toJson(xml, { object:true, coerce: true})
-
-        const thumbnail = data.items.item.thumbnail
-        const type = data.items.item.type
-        
-        const links = data.items.item.link
-        
-        const isKickstarter = links.some(link => link.value === 'Crowdfunding: Kickstarter')
-        return { ...item, isKickstarter, thumbnail, type }
-    })
-    
-    const result = await Promise.all(updatedItems)
+    ))
+    console.log('')
+    console.log('Done')
     
     if (result.includes(null)) {
         return null
@@ -77,3 +75,48 @@ async function updateItems(items) {
         return result
     }
 }
+
+async function executeSequential(a, f) {
+    return a.reduce(
+        async (previousResultPromise, x) => {
+            const result = await previousResultPromise
+            const y = await f(x)
+            return [...result, y]
+        },
+        Promise.resolve([])
+    )
+}
+
+function retryOnError({ retries, onRetry }, f) {
+    return async (...args) => {
+        try {
+            const result = await f(...args)
+            return result
+        } catch (e) {
+            if (!retries) throw e
+
+            const timeToWait = calculateWaitTime({ maxWaitTime: 25000, retries })
+            console.log(`Call failed, waiting for ${timeToWait} milliseconds before trying again`)
+            await timeout(timeToWait)
+            
+            const availableRetries = retries - 1
+
+            onRetry({ availableRetries })
+
+            const retryOnErrorFunction = retryOnError({ retries: availableRetries }, f)
+            const result = await retryOnErrorFunction(...args)
+            return result
+        }
+    }
+}
+
+function calculateWaitTime({ maxWaitTime, retries }) {
+    const factor = 1 / retries
+    const adjustedFactor = Math.pow(factor, 2)
+    const totalWaitTime = maxWaitTime * adjustedFactor
+    return totalWaitTime
+}
+
+async function timeout(milliseconds) {
+    return new Promise((resolve) => { setTimeout(resolve, milliseconds) })
+} 
