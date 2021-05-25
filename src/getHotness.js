@@ -41,7 +41,7 @@ async function fetchItems(items) {
     const result = await executeSequential(items, retryOnError(
         { 
             retries: 5, 
-            onRetry: ({ availableRetries }) => console.log(`Retrying, ${availableRetries} retries left`),
+            retryOnError: ({ availableRetries }) => console.log(`Retrying, ${availableRetries} retries left`),
         },
         async (item) => {
             // console.log(`Retrieving item with id ${item.id}`)
@@ -87,7 +87,7 @@ async function executeSequential(a, f) {
     )
 }
 
-function retryOnError({ retries, onRetry }, f) {
+function retryOnError({ retries, retryOnError }, f) {
     return async (...args) => {
         try {
             const result = await f(...args)
@@ -101,7 +101,7 @@ function retryOnError({ retries, onRetry }, f) {
             
             const availableRetries = retries - 1
 
-            onRetry({ availableRetries })
+            retryOnError({ availableRetries })
 
             const retryOnErrorFunction = retryOnError({ retries: availableRetries }, f)
             const result = await retryOnErrorFunction(...args)
