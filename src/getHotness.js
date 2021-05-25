@@ -76,12 +76,12 @@ async function fetchItems(items) {
     }
 }
 
-async function executeSequential(a, f) {
-    return a.reduce(
-        async (previousResultPromise, x) => {
+async function executeSequential(items, f) {
+    return items.reduce(
+        async (previousResultPromise, item) => {
             const result = await previousResultPromise
-            const y = await f(x)
-            return [...result, y]
+            const newItemPromise = await f(item)
+            return [...result, newItemPromise]
         },
         Promise.resolve([])
     )
@@ -96,7 +96,7 @@ function retryOnError({ retries, onRetry }, f) {
             if (!retries) throw e
 
             const timeToWait = calculateWaitTime({ maxWaitTime: 25000, retries })
-            console.log(`Call failed, waiting for ${timeToWait} milliseconds before trying again`)
+            console.log(`Call failed due to ${e.name}, waiting for ${timeToWait} milliseconds before trying again`)
             await timeout(timeToWait)
             
             const availableRetries = retries - 1
@@ -113,7 +113,7 @@ function retryOnError({ retries, onRetry }, f) {
 function calculateWaitTime({ maxWaitTime, retries }) {
     const factor = 1 / retries
     const adjustedFactor = Math.pow(factor, 2)
-    const totalWaitTime = maxWaitTime * adjustedFactor
+    const totalWaitTime = Math.ceil(maxWaitTime * adjustedFactor)
     return totalWaitTime
 }
 
