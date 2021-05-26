@@ -30,8 +30,10 @@ async function addNewGamesToPGDB(items) {
         await client.query(createQuery)
 
         const bundle = items.map(async (boardGame) => {
+            const yearPublished = boardGame.yearpublished !== undefined ? boardGame.yearpublished.value : new Date().getFullYear()
+
             const addQuery = `INSERT INTO ${tableName}(bgg_id, name, yearpublished, iskickstarter, thumbnail, type) VALUES($1, $2, $3, $4, $5, $6)`
-            const values = [boardGame.id, boardGame.name.value, boardGame.yearpublished.value, boardGame.isKickstarter, boardGame.thumbnail, boardGame.type]
+            const values = [boardGame.id, boardGame.name.value, yearPublished, boardGame.isKickstarter, boardGame.thumbnail, boardGame.type]
             await client.query(addQuery, values)
         })
         await Promise.all(bundle)

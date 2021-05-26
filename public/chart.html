@@ -24,7 +24,8 @@
                     <option value="week">last week</option>
                     <option value="month">last month</option>
                 </select>
-            <button type="submit" onclick="buildChart()" id="input-btn">change period</button>
+            <button type="submit" onclick="buildChart()" id="input-btn">change period</button><br><br>
+            <button type="button" onclick="" id="return-btn">Return to table</button>
     </div>
     <div class="canvas-holder" width="400" height="400">
         <canvas id="lineChart"></canvas>
@@ -32,13 +33,6 @@
     <div class="footer">
         <p>All rights to the data shown here belong to BoardGameGeek and their team. They have the right to stop providing this data or ask for it's retraction at any time.</p>
     </div>
-    <!-- <script>
-        window.addEventListener('load', (event) => {
-            
-            bggID_Field.value = '167355'
-            bggID_Field.disabled = true
-        })
-    </script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
     <script src='./js/buildChart.js'></script>
     </body>

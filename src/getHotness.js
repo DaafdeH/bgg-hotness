@@ -5,19 +5,11 @@ const { hotItemsToPGDB, addNewGamesToPGDB } = require('./PG/PGInteractions')
 module.exports = getHotness
 
 async function getHotness() {
-    const bggItems = await queryBGG()
+        const bggItems = await queryBGG()
+        const updateditems = await fetchItems(bggItems)
 
-    let attempts = 0;
-    const updateditems = await fetchItems(bggItems)
-
-    try{
         await hotItemsToPGDB(bggItems)
-        await addNewGamesToPGDB(updateditems)
-    } catch (e) {
-        console.error(e)
-        console.log(`updateditems = ${updateditems}`)
-    }
-    
+        await addNewGamesToPGDB(updateditems)  
 }
 
 async function queryBGG() {
