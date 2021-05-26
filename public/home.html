@@ -67,6 +67,9 @@
         <script>
             function repopulateTable() {populateTable()}</script>
         <script src='./js/populateTable.js'></script>
+        <script>
+            window.addEventListener('load', event => repopulateTable())
+        </script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
             $(window).on("load resize ", function() {
             var scrollWidth = $('.tbl-content').width() - $('.tbl-content table').width();
