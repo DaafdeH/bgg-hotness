@@ -72,6 +72,7 @@ async function executeSequential(items, f) {
     return items.reduce(
         async (previousResultPromise, item) => {
             const result = await previousResultPromise
+            await timeout(200)
             const newItemPromise = await f(item)
             return [...result, newItemPromise]
         },
