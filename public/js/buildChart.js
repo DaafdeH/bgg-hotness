@@ -46,9 +46,11 @@ async function buildChart() {
    if (period !== "today") {
        period = "last " + period
    }
+   
+   if (window.myNewChart != null) window.myNewChart.destroy()
 
     const CHART = document.getElementById('lineChart')
-        new Chart(CHART, {
+        window.myNewChart = new Chart(CHART, {
             type: 'line',
             data: {
                 labels,
@@ -60,9 +62,17 @@ async function buildChart() {
                 }]
             },
             options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        min: 0,
+                        max: 50,
+                        reverse: true
+                    }
+                },
                 title: {
-                display: true,
-                text: `Rank for ${label} ${period} `
+                    display: true,
+                    text: `Rank for ${label} ${period} `
                 }
             }
         });
