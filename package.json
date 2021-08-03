@@ -7,7 +7,8 @@
     "dev": "env-cmd -f ./config/dev.env node getData.js",
     "dev2": "env-cmd -f ./config/dev.env nodemon index.js",
     "test": "env-cmd -f ./config/dev.env node ./src/fetchService.js",
-    "start": "node index.js"
+    "start": "node index.js",
+    "delete": "env-cmd -f ./config/dev.env node deleteOldFiles.js"
   },
   "author": "D. de Hair",
   "license": "ISC",
